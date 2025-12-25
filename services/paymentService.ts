@@ -35,6 +35,7 @@ export const createOrUpdateUser = async (uid: string, email: string, displayName
 
     // Log the bonus transaction
     const transRef = push(ref(db, `transactions/${uid}`));
+    // Fixed: Added status property to bonus transaction
     const bonusTrans: Transaction = {
       id: transRef.key!,
       fromUid: 'SYSTEM',
@@ -44,7 +45,8 @@ export const createOrUpdateUser = async (uid: string, email: string, displayName
       amount: INITIAL_BONUS,
       type: 'BONUS',
       timestamp: Date.now(),
-      note: 'Welcome Bonus'
+      note: 'Welcome Bonus',
+      status: 'SUCCESS'
     };
     await set(transRef, bonusTrans);
 
@@ -109,7 +111,7 @@ export const sendMoney = async (
     const fromName = result.snapshot.val().displayName;
     const toName = targetMapping.displayName;
 
-    // Fixed: transactionData should omit 'type' as well since it's added during the set call
+    // Fixed: Added status property to transaction data
     const transactionData: Omit<Transaction, 'id' | 'type'> = {
       fromUid,
       fromName,
@@ -118,7 +120,8 @@ export const sendMoney = async (
       amount,
       timestamp: Date.now(),
       note,
-      upiId: toUpiId
+      upiId: toUpiId,
+      status: 'SUCCESS'
     };
 
     const transRefFrom = push(ref(db, `transactions/${fromUid}`));

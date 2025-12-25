@@ -2,7 +2,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Transaction } from "../types";
 
-// Always use process.env.API_KEY directly for initialization
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const getSpendingInsights = async (transactions: Transaction[]) => {
@@ -11,7 +10,6 @@ export const getSpendingInsights = async (transactions: Transaction[]) => {
   const prompt = `Analyze these recent UPI transactions and provide a short, encouraging 1-sentence insight for the user: ${JSON.stringify(transactions.slice(0, 5))}`;
   
   try {
-    // Basic text task uses gemini-3-flash-preview
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: prompt,
@@ -19,17 +17,45 @@ export const getSpendingInsights = async (transactions: Transaction[]) => {
         systemInstruction: "You are a helpful financial assistant for a payment app called SkyPay. Be concise and friendly.",
       }
     });
-    // Accessing text property directly as per guidelines
     return response.text || "Keep track of your spending to save more!";
   } catch (err) {
-    console.error("AI Insight Error:", err);
     return "AI insights currently unavailable.";
   }
 };
 
+export const getSpendingBreakdown = async (transactions: Transaction[]) => {
+  if (transactions.length === 0) return [];
+  
+  const prompt = `Categorize these transactions into Food, Travel, Shopping, Bills, or Others. Return a JSON array of objects with {category, amount, count}. Data: ${JSON.stringify(transactions)}`;
+  
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-3-flash-preview',
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.ARRAY,
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              category: { type: Type.STRING },
+              amount: { type: Type.NUMBER },
+              count: { type: Type.NUMBER }
+            },
+            required: ["category", "amount", "count"]
+          }
+        }
+      }
+    });
+    return JSON.parse(response.text || "[]");
+  } catch (err) {
+    return [];
+  }
+};
+
 export const validatePaymentSecurity = async (amount: number, note: string) => {
-  // Complex reasoning task about security uses gemini-3-pro-preview
-  const prompt = `Analyze if this payment of ₹${amount} for "${note}" looks suspicious based on typical user behavior. Return a safety score from 0-100 and a reason.`;
+  const prompt = `Analyze if this payment of ₹${amount} for "${note}" looks suspicious. Return a safety score 0-100 and a reason.`;
   
   try {
     const response = await ai.models.generateContent({
@@ -47,12 +73,8 @@ export const validatePaymentSecurity = async (amount: number, note: string) => {
         }
       }
     });
-    
-    // Safely extract and trim the JSON response string
-    const jsonStr = (response.text || "").trim();
-    return JSON.parse(jsonStr || '{"safetyScore": 100, "reason": "Verified safe"}');
+    return JSON.parse(response.text || '{"safetyScore": 100, "reason": "Verified safe"}');
   } catch (err) {
-    console.error("AI Validation Error:", err);
     return { safetyScore: 100, reason: "Local validation passed" };
   }
 };

@@ -22,6 +22,8 @@ export interface Transaction {
   timestamp: number;
   note?: string;
   upiId?: string;
+  category?: string;
+  status: 'SUCCESS' | 'PENDING' | 'FAILED';
 }
 
 export interface UpiMapping {
