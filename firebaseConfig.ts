@@ -3,7 +3,6 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
-// Provided by user
 const firebaseConfig = {
   apiKey: "AIzaSyC-t_vB6OujhQfAHuMoC9VgybEIl8IaAsA",
   authDomain: "whatsapp-like-app-cabcf.firebaseapp.com",
