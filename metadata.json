@@ -1,0 +1,7 @@
+{
+  "name": "Copy of SkyPay UPI",
+  "description": "A high-performance, secure UPI-inspired payment application with real-time transfers, QR code generation/scanning, and instant rewards.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
