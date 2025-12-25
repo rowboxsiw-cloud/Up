@@ -1,7 +1,8 @@
 {
-  "name": "Copy of SkyPay UPI",
-  "description": "A high-performance, secure UPI-inspired payment application with real-time transfers, QR code generation/scanning, and instant rewards.",
+  "name": "SkyPay Intelligence",
+  "description": "A high-performance UPI payment app integrated with next-gen Gemini AI features including Live Audio, Veo Video, and Thinking Pro models.",
   "requestFramePermissions": [
-    "camera"
+    "camera",
+    "microphone"
   ]
 }
