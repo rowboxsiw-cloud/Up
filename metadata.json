@@ -1,6 +1,6 @@
 {
-  "name": "SkyPay Intelligence",
-  "description": "A high-performance UPI payment app integrated with next-gen Gemini AI features including Live Audio, Veo Video, and Thinking Pro models.",
+  "name": "SkyPay Pro AI",
+  "description": "Next-gen UPI app with Gemini-powered voice payments, real-time fraud detection, and smart spending insights.",
   "requestFramePermissions": [
     "camera",
     "microphone"
